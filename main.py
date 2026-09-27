@@ -26,12 +26,19 @@ knopka = ReplyKeyboardMarkup(
 @dp.message(Command('start'))
 async def start(message: Message):
     await message.answer(f"Hello  @{message.from_user.username}", reply_markup=knopka)
-    
+
+
+
 @dp.message(Command('add_recipe'))
 async def recipes(message: Message, command: CommandObject):
     recipe = command.args
+    if not recipe:
+        await message.answer("Вы ничего не добавили!")
+        return recipe
     await add_recipe(recipe)
     await message.answer(f"Вы добавили: {recipe}!")
+
+
 
 @dp.message(Command('add_ingredient'))
 async def ingredients(message: Message, command: CommandObject):
@@ -82,12 +89,14 @@ async def shopping_list(message: Message):
     result = await get_shopping_list(message.from_user.id)
 
     if not result:
-        await message.answer("Ваш план питания пуст")
+        await message.answer("🙅Ваш план питания пуст🙅")
         return
 
     text = f"🛒 Список покупок для @{message.from_user.username}:\n\n"
     for i in result:
-        text += f"{i['day_of_week']}\n • {i['title_recipe']} • {i['name_ingrid']}: • {i['amount']}кг\n\n"
+        text = text + f"{i['day_of_week']}\n"
+        text = text + f"🍲{i['title_recipe']}\n"
+        text = text + f"{i['name_ingrid']}—{i['amount']}кг\n\n"
 
     await message.answer(text)
 
@@ -98,7 +107,7 @@ async def start(message: Message):
     await message.answer(f'Точики гап зан!')
 
 async def main():
-    print(green('BOT РАБОТАЕТ!!!'))
+    print(green('👍BOT РАБОТАЕТ!!!'))
 
     await create_table()
     await dp.start_polling(bot)
