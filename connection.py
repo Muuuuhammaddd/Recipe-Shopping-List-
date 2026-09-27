@@ -36,7 +36,7 @@ async def create_table():
             CREATE TABLE IF NOT EXISTS meal_plan(
                 plan_id serial primary key,
                 user_id text,
-                day_of_week smallint,
+                day_of_week varchar(30),
                 recipe_id int references recipes(recipe_id)
             );
         """)
